@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void merge(int left1, int right1, int left2, int right2, int* arr)
+{
+    int len = right2 - left1 + 1;
+    int *temp = malloc((len + 2) * sizeof(int));
+    int p1 = left1, p2 = left2;
+    int pos = 0;
+    while((p1 != (right1 + 1)) || (p2 != (right2 + 1)))
+    {
+        if(p1 == right1 + 1) 
+        {
+            temp[pos] = arr[p2];
+            p2++;
+            pos++;
+        }
+        else if(p2 == right2 + 1)
+        {
+            temp[pos] = arr[p1];
+            p1++;
+            pos++;
+        }
+        else
+        {
+            if(arr[p1] <= arr[p2]) 
+            {
+                temp[pos] = arr[p1];
+                p1++;
+                pos++;
+            }
+            else
+            {
+                temp[pos] = arr[p2];
+                p2++;
+                pos++;
+            }
+        }
+    }
+    for(int i = left1; i <= right2; i++)
+    {
+        arr[i] = temp[i-left1];
+    }
+    free(temp);
+}
+
+void mergesort1(int left, int right, int* arr)
+{
+    if(left == right) return;
+    int mid = (left + right)/2;
+    mergesort1(left, mid, arr);
+    mergesort1(mid + 1, right, arr);
+    merge(left, mid, mid+1, right, arr);
+}
+
+void mergesort(int* arr, int size)
+{
+    mergesort1(0, size-1, arr);
+}
+
+int main()
+{
+    // testing mergesort: Can sort 5 million elements in a second! 
+    int n = 50000000;
+    int *arr = malloc((n+2) * sizeof(int));
+    for(int i = 0; i < n; i++)
+    {
+        arr[i] = n - i;
+    }
+    mergesort(arr, n);
+    /*for(int i = 0; i < n; i++)
+    {
+        printf("%d ", arr[i]);
+    }*/
+    printf("Done");
+    printf("\n");
+    free(arr);
+    return 0;
+}
